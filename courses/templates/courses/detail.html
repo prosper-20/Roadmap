@@ -1,0 +1,183 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<link rel="stylesheet" href="{% static 'css/courses/detail.css' %}" />
+
+<!-- Page content-->
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-lg-8">
+      <!-- Post content-->
+      <article>
+        <!-- Post header-->
+        <header class="mb-4">
+          <!-- Post title-->
+          <h1 class="fw-bolder mb-1">{{course.title}}!</h1>
+          <!-- Post meta content-->
+          {% comment %} <div class="text-muted fst-italic mb-2">
+            Posted on January 1, 2022 by Start Bootstrap
+          </div> {% endcomment %}
+          <!-- Post categories-->
+          <a class="badge bg-secondary text-decoration-none link-light"
+            href="#!">{{course.label}}</a>
+
+          <a class="badge bg-secondary text-decoration-none link-light"
+            href="#!">Freebies</a>
+        </header>
+
+        
+
+        <!-- Preview image figure-->
+        <figure class="mb-4">
+          {% comment %} <img
+            class="img-fluid rounded"
+            src="https://dummyimage.com/900x400/ced4da/6c757d.jpg"
+            alt="..."
+          /> {% endcomment %}
+        </figure>
+        <!-- Post content-->
+        <section class="mb-5">
+          <p class="fs-5 mb-4">
+            {{course.description | safe}}
+          </p>
+         
+        </section>
+      </article>
+
+
+      <div class="main-duration-container">
+        <div class="duration">
+          <p class="display-6">Pick your learning schedule</p>
+        </div>
+
+        <div class="duration-container">
+          
+          {% for schedule in schedules  %}
+
+          <div class="r-duration duration-daily">
+              <div class="duration-heading">
+                <h4>{{schedule.title}}</h4>
+              </div>
+
+              <div class="form-check-container">
+
+              
+              {% for mini_schedule in schedule.mini_schedule.all  %}
+
+              <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="flexRadioDefault"
+                    id="flexRadioDefault{{mini_schedule.id}}"
+                    data-new_id = {{mini_schedule.id}}
+                    data-sch_id={{mini_schedule.schedule.id}}
+                    data-course_id={{course.id}}
+                  />
+                  <label class="form-check-label" for="flexRadioDefault{{mini_schedule.id}}">
+                     {{mini_schedule.title}}
+                  </label>
+                </div>
+                  
+              {% endfor %}
+                  
+
+              
+
+                
+
+               
+
+              </div>
+            </div>
+              
+          {% endfor %}
+              
+          
+        </div>
+
+        <div class="duration-button">
+          <button class="g-button btn btn-primary" style="width: 100%" disabled>Generate Roadmap</button>
+        </div>
+      </div>
+
+
+      
+      {% if user_course %}
+
+      <ul class="loader-container-main list-group list-group-horizontal-xxl" style="margin-bottom:10px">
+        <li class="list-group-item"><strong>Title: </strong><span>Comprehensive {{user_course.course.label}} roadmap</span></li>
+        <li class="list-group-item"><strong>Duration: </strong><span>{{user_course.mini_schedule.title}}</span></li>
+        <li class="list-group-item"><strong>Frequency: </strong><span>{{user_course.schedule.title}}</span></li>
+        <li class="list-group-item"><strong>Roadmap:</strong></li>
+        
+        {% for r in user_course.roadmap.all %}
+        <li class="list-group-item">-- {{r.title}}</li>
+        {% endfor %}
+          
+      </ul>
+        
+      {% endif %}   
+
+      <ul class="loader-container list-group list-group-horizontal-xxl">
+        <p class="placeholder-glow">
+          <span class="placeholder-glow col-12"></span>
+          <span class="placeholder-glow col-12"></span>
+          <span class="placeholder-glow col-12"></span>
+          <span class="placeholder-glow col-12"></span>
+          <span class="placeholder-glow col-12"></span>
+          <span class="placeholder-glow col-12"></span>
+          <span class="placeholder-glow col-12"></span>
+          <span class="placeholder-glow col-12"></span>
+          <span class="placeholder-glow col-12"></span>
+          <span class="placeholder-glow col-12"></span>
+          <span class="placeholder-glow col-12"></span>
+          <span class="placeholder-glow col-12"></span>
+        </p>
+
+       
+      </ul>
+
+
+      <!-- Comments section-->
+    </div>
+    <!-- Side widgets-->
+    <div class="col-lg-4">
+      <!-- Search widget-->
+      <div class="card mb-4">
+        <div class="card-header">Related Courses</div>
+        <div class="card-body">
+          
+          {% for c in c_courses  %}
+          <div class="card mb-3" style="width: 18rem;">
+            <img src="{{c.thumbnail.url}}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <a href="{% url 'courses:course' c.slug %}" class="text-decoration-none link-dark stretched-link">
+                <h5 class="card-title">{{c.title}}</h5>
+              </a>
+              <p class="card-text">{{c.description | safe | truncatechars:"100"}}</p>
+              {% comment %} <a href="#" class="btn btn-primary">Go somewhere</a> {% endcomment %}
+            </div>
+          </div>
+          {% endfor %}
+            
+        </div>
+      </div>
+      <!-- Categories widget-->
+
+      <!-- Side widget-->
+ 
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  let isAuthenticated = "{{request.user.is_authenticated}}"
+  let r_url = "{% url 'auth:register' %}"
+  let r_num = "{{r_num}}"
+</script>
+
+<script src="{% static 'js/courses/detail.js' %}"></script>
+
+{% endblock content %}
